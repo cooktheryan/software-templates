@@ -1,0 +1,37 @@
+apiVersion: tekton.dev/v1beta1
+kind: PipelineRun
+metadata:
+  labels:
+    app: ${{ values.component_id }}
+  name: ${{ values.component_id }}-initial-run
+  namespace: ${{ values.namespace }}
+spec:
+  params:
+  - name: APP_NAME
+    value: ${{ values.component_id }}
+  - name: GIT_REPO
+    value: https://github.com/${{ values.org }}/${{ values.component_id }}
+  - name: GIT_REVISION
+    value: ""
+  - name: IMAGE_NAME
+    value: ${{ values.registry }}/${{ values.imagenamespace }}/${{ values.component_id }}
+  - name: PATH_CONTEXT
+    value: .
+  - name: VERSION
+    value: 3.9-ubi8
+  pipelineRef:
+    name: ${{ values.component_id }}-image-build
+  serviceAccountName: pipeline
+  timeout: 1h0m0s
+  workspaces:
+  - name: workspace
+    volumeClaimTemplate:
+      metadata:
+        labels:
+          tekton.dev/pipeline: ${{ values.component_id }}-image-build
+      spec:
+        accessModes:
+        - ReadWriteOnce
+        resources:
+          requests:
+            storage: 1Gi
