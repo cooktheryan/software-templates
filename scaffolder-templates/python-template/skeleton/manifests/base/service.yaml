@@ -2,11 +2,12 @@ kind: Service
 apiVersion: v1
 metadata:
   name: ${{ values.component_id }}
+  namespace: ${{ values.namespace }}
 spec:
   ports:
-    - name: http-5000
-      port: 5000
+    - name: http-8080
+      port: 8080
       protocol: TCP
-      targetPort: 5000
+      targetPort: 8080
   selector:
     app: ${{ values.component_id }}

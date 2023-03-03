@@ -54,12 +54,35 @@ spec:
           default: GitHub Actions
           enum:
             - ./github-actions-skeleton
+            - ./manifests/base/tekton-pipeline.yaml
           enumNames:
             - GitHub Action
+            - Tekton
+    - title: Choose the image registry
+      required:
+        - registry
+      properties:
+        registry:
+          title: Select a registry
+          type: string
+          default: image-registry.openshift-image-registry.svc:5000
+          enum:
+            - image-registry.openshift-image-registry.svc:5000
+            - quay.io
+          enumNames:
+            - Internal OpenShift Registry
+            - Quay
+    - title: Generate OpenShift Route
+      required:
+        - route
+      properties:
+        route:
+          title: Generate OpenShift Route
+          type: boolean
+          default: true
     - title: Provide information for Deployment with ArgoCD
       required:
         - namespace
-        - imagenamespace
       properties:
         namespace:
           title: Namespace
@@ -68,7 +91,7 @@ spec:
         imagenamespace:
           title: Image Namespace
           type: string
-          description: Enter the Quay.io Image Namespace quay.io/<IMAGE_NAMESPACE>/${{ parameters.repo }} 
+          description: Enter the Image Namespace $REGISTRY/<IMAGE_NAMESPACE>/${{ parameters.repo }} for internal this will be the namespace
   steps:
     - id: template
       name: Generating CI Component
@@ -79,13 +102,15 @@ spec:
           - .github/workflows/
 
     - id: template
-      name: Generating Component
+      name: Generating Component using quay.io
+      if: ${{ parameters.registry === 'quay.io'}} && ${{ parameters.ci === './github-actions-skeleton'}}
       action: fetch:template
       input:
         url: ./skeleton
         copyWithoutRender:
           - .github/workflows/
         values:
+          registry: ${{ parameters.registry }}
           component_id: ${{ parameters.repo }}
           description: ${{ parameters.description }}
           destination: ${{ parameters.org }}/${{ parameters.repo }}
@@ -93,7 +118,39 @@ spec:
           owner: ${{ parameters.owner}}
           namespace: ${{ parameters.namespace }}
           imagenamespace: ${{ parameters.imagenamespace }}
-    
+
+    - id: template
+      name: Generating Components using the OpenShift Registry
+      # If the registry is the OpenShift Registry and tekton is selected
+      if: ${{ parameters.registry === 'image-registry.openshift-image-registry.svc:5000'}} && ${{ parameters.ci === './manifests/base/tekton-pipeline.yaml'}}
+      action: fetch:template
+      input:  
+        url: ./skeleton
+        values:
+          registry: ${{ parameters.registry }}
+          component_id: ${{ parameters.repo }}
+          description: ${{ parameters.description }}
+          destination: ${{ parameters.org }}/${{ parameters.repo }}
+          org: ${{ parameters.org }}
+          owner: ${{ parameters.owner}}
+          namespace: ${{ parameters.namespace }}
+          imagenamespace: ${{ parameters.namespace }}
+
+    - name: Delete Tekton Pipeline if GitHub Actions are selected
+      if: ${{ parameters.ci === './github-actions-skeleton'}}
+      action: fs:delete
+      input:
+        files:
+          - ./manifests/base/tekton-pipeline.yaml
+          - ./manifests/base/tekton-pipeline-run.yaml
+
+    - name: Delete Route if not selected
+      if: ${{ parameters.route === false}}
+      action: fs:delete
+      input:
+        files:
+          - ./manifests/base/route.yaml
+
     - id: publish
       name: Publishing to Source Code Repository
       action: publish:github
