@@ -65,7 +65,9 @@ spec:
       action: fetch:template
       input:
         url: ./skeleton
+        targetPath: projects
         values:
+          component_id: ${{ parameters.name }}
           repo: ${{ parameters.repo }}
           branch: ${{ parameters.branch }}
           name: ${{ parameters.name }}
