@@ -14,13 +14,13 @@ spec:
     - title: Provide information about the GitHub location
       required:
         - githubOrg
-        - repoName
+        - repo_name
       properties:
         githubOrg:
           title: GitHub Organization
           type: string
           default: 'cooktheryan'
-        repoName:
+        repo_name:
           title: Repository Name
           type: string
           default: 'backstage-awx-resources'
@@ -56,6 +56,17 @@ spec:
           schedule: ${{ parameters.schedule }}
           name: ${{ parameters.name }}
 
+    - id: catalog-template
+      name: Generating catalog-info.yaml
+      action: fetch:template
+      input:
+        url: ../../scaffolder-skeletons/catalog-info-skeleton/
+        values:
+          github_org: ${{ parameters.githubOrg }}
+          repo_name: ${{ parameters.repo_name }}
+          description: ${{ parameters.name}}-schedule
+          owner: ${{ parameters.owner}}
+
     - id: publish
       name: Publishing to Source Code Repository
       action: publish:github:pull-request
@@ -63,7 +74,7 @@ spec:
         allowedHosts: ['github.com']
         title: ${{ parameters.name }}-schedule
         description: Schedule for ${{ parameters.name }}
-        repoUrl: github.com?owner=${{ parameters.githubOrg }}&repo=${{ parameters.repoName }}
+        repoUrl: github.com?owner=${{ parameters.githubOrg }}&repo=${{ parameters.repo_name }}
         branchName: ${{ parameters.name }}-schedule
 
     - id: register
