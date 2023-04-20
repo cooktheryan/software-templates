@@ -1,7 +1,7 @@
 apiVersion: tower.ansible.com/v1alpha1
 kind: AnsibleSchedule
 metadata:
-  name: ${{values.name}}-${{values.jobTemplate}}-schedule
+  name: ${{values.name}}-schedule
 spec:
   connection_secret: awxaccess
   runner_pull_policy: IfNotPresent
