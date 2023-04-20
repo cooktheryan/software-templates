@@ -59,21 +59,6 @@ spec:
           type: string
           default: Default
           description: The organization for the project
-    - title: Provide information about the CI method
-      required:
-        - ci
-      properties:
-        ci:
-          title: Select a CI method
-          type: string
-          description: This action will create a simple CI based on chosen method
-          default: ../../scaffolder-skeletons/github-actions-skeleton/
-          enum:
-            - ../../scaffolder-skeletons/github-actions-skeleton/
-            - ../../scaffolder-skeletons/tekton-skeleton/
-          enumNames:
-            - GitHub Action
-            - Tekton
   steps:
     - id: template
       name: Generating the source code component
