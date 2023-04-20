@@ -14,8 +14,21 @@ spec:
     - title: Provide information about the GitHub location
       required:
         - githubOrg
-        - repoName
+        - repo_name
       properties:
+        githubOrg:
+          title: GitHub Organization
+          type: string
+          default: 'cooktheryan'
+        owner:
+          title: Owner
+          type: string
+          description: Owner of the component
+          default: 'user: cooktheryan'
+        repo_name:
+          title: Repository Name
+          type: string
+          default: 'backstage-awx-resources'
         githubOrg:
           title: GitHub Organization
           type: string
