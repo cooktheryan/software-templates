@@ -59,7 +59,7 @@ spec:
           enumNames:
             - Git
             - Zip File
-        repo:
+        codeRepo:
           title: URL
           type: string
           description: The URL for the Git repository or archive
