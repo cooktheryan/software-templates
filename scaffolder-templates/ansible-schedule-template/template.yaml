@@ -20,6 +20,15 @@ spec:
           title: GitHub Organization
           type: string
           default: 'cooktheryan'
+        owner:
+          title: Owner
+          type: string
+          description: Owner of the component
+          default: 'user: cooktheryan'
+        description: 
+          title: Description
+          type: string
+          description: Help others understand what this component is for
         repo_name:
           title: Repository Name
           type: string
