@@ -62,7 +62,7 @@ spec:
       input:
         allowedHosts: ['github.com']
         title: ${{ parameters.name }}-schedule
-        description: ${{ parameters.description }}
+        description: Schedule for ${{ parameters.name }}
         repoUrl: github.com?owner=${{ parameters.githubOrg }}&repo=${{ parameters.repoName }}
         branchName: ${{ parameters.name }}-schedule
 
