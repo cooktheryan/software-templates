@@ -96,7 +96,7 @@ spec:
         title: ${{ parameters.name }}-project
         description: ${{ parameters.description }}
         repoUrl: github.com?owner=${{ parameters.githubOrg }}&repo=${{ parameters.repoName }}
-        branchName: main
+        branchName: ${{ parameters.name }}-project
 
   output:
     links:
