@@ -1,14 +1,14 @@
 apiVersion: scaffolder.backstage.io/v1beta3
 kind: Template
 metadata:
-  name: go-backend-template
-  title: Go Backend Golden Path Template
-  description: Create a starter Go backend application managed by ArgoCD with a CI pipeline
+  name: ansible-project-template
+  title: AAP Project Template
+  description: Define a new Ansible Project
   tags:
     - recommended
-    - go
+    - aap
 spec:
-  owner: janus-idp
+  owner: cooktheryan
   type: service
 
   parameters:
@@ -76,66 +76,18 @@ spec:
             - GitHub Action
             - Tekton
   steps:
-    - id: ci-template
-      name: Generating the CI component
-      action: fetch:template
-      input:
-        url: ${{ parameters.ci }}
-        copyWithoutTemplating:
-          - .github/workflows/
-        values:
-          github_org: ${{ parameters.githubOrg }}
-          repo_name: ${{ parameters.repoName }}
-          namespace: ${{ parameters.namespace }}
-          image_namespace: ${{ parameters.imageNamespace }}
-          default_branch: main
-          image_builder: s2i-go
-          image_repository: ${{ parameters.imageRepository }}
-
     - id: template
       name: Generating the source code component
       action: fetch:template
       input:
         url: ./skeleton
         values:
-          github_org: ${{ parameters.githubOrg }}
-          repo_name: ${{ parameters.repoName }}
+          repo: ${{ parameters.repo }}
+          branch: ${{ parameters.branch }}
+          name: ${{ parameters.name }}
+          scm_type: ${{ parameters.scm_type }}
+          organization: ${{ parameters.organization }}}
           description: ${{ parameters.description }}
-          owner: ${{ parameters.owner}}
-          namespace: ${{ parameters.namespace }}
-          image_namespace: ${{ parameters.imageNamespace }}
-          port: ${{ parameters.port }}
-          image_repository: ${{ parameters.imageRepository }}
-
-    - id: catalog-template
-      name: Generating catalog-info.yaml
-      action: fetch:template
-      input:
-        url: ../../scaffolder-skeletons/catalog-info-skeleton/
-        values:
-          github_org: ${{ parameters.githubOrg }}
-          repo_name: ${{ parameters.repoName }}
-          description: ${{ parameters.description }}
-          owner: ${{ parameters.owner}}
-          namespace: ${{ parameters.namespace }}
-          image_namespace: ${{ parameters.imageNamespace }}
-          port: ${{ parameters.port }}
-          image_repository: ${{ parameters.imageRepository }}
-
-    - id: manifests-template
-      name: Generating manifest component
-      action: fetch:template
-      input:
-        url: ../../scaffolder-skeletons/manifests-skeleton/
-        values:
-          github_org: ${{ parameters.githubOrg }}
-          repo_name: ${{ parameters.repoName }}
-          description: ${{ parameters.description }}
-          owner: ${{ parameters.owner}}
-          namespace: ${{ parameters.namespace }}
-          image_namespace: ${{ parameters.imageNamespace }}
-          port: ${{ parameters.port }}
-          image_repository: ${{ parameters.imageRepository }}
 
     - id: publish
       name: Publishing to Source Code Repository
@@ -145,13 +97,6 @@ spec:
         description: ${{ parameters.description }}
         repoUrl: github.com?owner=${{ parameters.githubOrg }}&repo=${{ parameters.repoName }}
         defaultBranch: main
-
-    - id: register
-      name: Registering the component
-      action: catalog:register
-      input:
-        repoContentsUrl: ${{ steps.publish.output.repoContentsUrl }}
-        catalogInfoPath: '/catalog-info.yaml'
 
   output:
     links:
