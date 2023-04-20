@@ -2,7 +2,7 @@ apiVersion: scaffolder.backstage.io/v1beta3
 kind: Template
 metadata:
   name: ansible-project-template
-  title: AAP Project Template
+  title: Ansible Automation Platform Project Template
   description: Define a new Ansible Project
   tags:
     - recommended
@@ -10,7 +10,6 @@ metadata:
 spec:
   owner: cooktheryan
   type: service
-
   parameters:
     - title: Provide information about the GitHub location
       required:
