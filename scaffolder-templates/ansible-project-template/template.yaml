@@ -93,9 +93,10 @@ spec:
       action: publish:github:pull-request
       input:
         allowedHosts: ['github.com']
+        title: ${{ parameters.name }}-project
         description: ${{ parameters.description }}
         repoUrl: github.com?owner=${{ parameters.githubOrg }}&repo=${{ parameters.repoName }}
-        defaultBranch: main
+        branchName: main
 
   output:
     links:
