@@ -75,6 +75,17 @@ spec:
           organization: ${{ parameters.organization }}}
           description: ${{ parameters.description }}
 
+    - id: catalog-template
+      name: Generating catalog-info.yaml
+      action: fetch:template
+      input:
+        url: ../../scaffolder-skeletons/catalog-info-skeleton/
+        values:
+          github_org: ${{ parameters.githubOrg }}
+          repo_name: ${{ parameters.repo_name }}
+          description: ${{ parameters.description }}
+          owner: ${{ parameters.owner}}
+
     - id: publish
       name: Publishing to Source Code Repository
       action: publish:github:pull-request
@@ -89,7 +100,7 @@ spec:
       name: Registering the component
       action: catalog:register
       input:
-        repoContentsUrl: ${{ steps.publish.output.repoContentsUrl }}
+        repoContentsUrl: https://github.com/${{ parameters.githubOrg }}/${{ parameters.repo_name }}/tree/${{ parameters.name }}-schedule/schedules
         catalogInfoPath: '/catalog-info.yaml'
 
   output:
