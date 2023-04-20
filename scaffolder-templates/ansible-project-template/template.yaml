@@ -109,7 +109,7 @@ spec:
       name: Registering the component
       action: catalog:register
       input:
-        repoContentsUrl: https://github.com/${{ parameters.githubOrg }}/${{ parameters.repo_name }}/tree/${{ parameters.name }}-schedule/schedules
+        repoContentsUrl: https://github.com/${{ parameters.githubOrg }}/${{ parameters.repo_name }}/tree/${{ parameters.name }}-projects
         catalogInfoPath: '/catalog-info.yaml'
 
   output:
