@@ -73,7 +73,7 @@ spec:
         values:
           github_org: ${{ parameters.githubOrg }}
           repo_name: ${{ parameters.repo_name }}
-          description: ${{ parameters.name}}-schedule
+          description: ${{ parameters.description }}
           owner: ${{ parameters.owner}}
 
     - id: publish
