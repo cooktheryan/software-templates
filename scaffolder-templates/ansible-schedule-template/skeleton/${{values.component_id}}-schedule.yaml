@@ -1,0 +1,10 @@
+apiVersion: tower.ansible.com/v1alpha1
+kind: AnsibleSchedule
+metadata:
+  name: ${{values.name}}-${{values.jobTemplate}}-schedule
+spec:
+  connection_secret: awxaccess
+  runner_pull_policy: IfNotPresent
+  name: ${{values.name}}
+  rrule: ${{values.schedule}}
+  unified_job_template: ${{values.jobTemplate}}

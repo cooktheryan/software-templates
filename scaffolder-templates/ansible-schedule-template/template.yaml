@@ -1,0 +1,75 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: ansible-schedule-template
+  title: Ansible Automation Platform Schedule
+  description: Define a new Ansible Schedule for a job
+  tags:
+    - recommended
+    - aap
+spec:
+  owner: cooktheryan
+  type: service
+  parameters:
+    - title: Provide information about the GitHub location
+      required:
+        - githubOrg
+        - repoName
+      properties:
+        githubOrg:
+          title: GitHub Organization
+          type: string
+          default: 'cooktheryan'
+        repoName:
+          title: Repository Name
+          type: string
+          default: 'backstage-awx-resources'
+    - title: AAP Schedule Defintion
+      required:
+        - schedule
+        - name
+        - jobTemplate
+      properties:
+        name:
+          title: Name of the Schedule
+          type: string
+          description: The name of the schedule
+        jobTemplate:
+          title: Name of the Job Template
+          type: string
+          description: Specify the job template to associate the schedule with
+        schedule:
+          title: Schedule of the job
+          type: string
+          default: "DTSTART:20210101T000000Z RRULE:FREQ=DAILY;INTERVAL=1;COUNT=1"
+          description: The time and frequency to run the job
+  steps:
+    - id: template
+      name: Generating the source code component
+      action: fetch:template
+      input:
+        url: ./skeleton
+        targetPath: schedules/
+        values:
+          component_id: ${{ parameters.name }}
+          jobTemplate: ${{ parameters.jobTemplate }}
+          schedule: ${{ parameters.schedule }}
+          name: ${{ parameters.name }}
+
+    - id: publish
+      name: Publishing to Source Code Repository
+      action: publish:github:pull-request
+      input:
+        allowedHosts: ['github.com']
+        title: ${{ parameters.name }}-schedule
+        description: ${{ parameters.description }}
+        repoUrl: github.com?owner=${{ parameters.githubOrg }}&repo=${{ parameters.repoName }}
+        branchName: ${{ parameters.name }}-schedule
+
+  output:
+    links:
+      - title: Source Code Repository
+        url: ${{ steps.publish.output.remoteUrl }}
+      - title: Open Component in catalog
+        icon: catalog
+        entityRef: ${{ steps.register.output.entityRef }}
