@@ -16,10 +16,6 @@ spec:
         - githubOrg
         - repo_name
       properties:
-        githubOrg:
-          title: GitHub Organization
-          type: string
-          default: 'cooktheryan'
         owner:
           title: Owner
           type: string
@@ -41,7 +37,7 @@ spec:
       required:
         - description
         - name
-        - repo
+        - codeRepo
         - scm_type
         - organization
       properties:
@@ -81,7 +77,7 @@ spec:
         targetPath: projects
         values:
           component_id: ${{ parameters.name }}
-          repo: ${{ parameters.repo }}
+          repo: ${{ parameters.codeRepo }}
           branch: ${{ parameters.branch }}
           name: ${{ parameters.name }}
           scm_type: ${{ parameters.scm_type }}
