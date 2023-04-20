@@ -1,0 +1,162 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: go-backend-template
+  title: Go Backend Golden Path Template
+  description: Create a starter Go backend application managed by ArgoCD with a CI pipeline
+  tags:
+    - recommended
+    - go
+spec:
+  owner: janus-idp
+  type: service
+
+  parameters:
+    - title: Provide information about the GitHub location
+      required:
+        - githubOrg
+        - repoName
+      properties:
+        githubOrg:
+          title: GitHub Organization
+          type: string
+          default: 'cooktheryan'
+        repoName:
+          title: Repository Name
+          type: string
+          default: 'backstage-awx-resources'
+    - title: AAP Project Defintion
+      required:
+        - description
+        - name
+        - repo
+        - scm_type
+        - organization
+      properties:
+        name:
+          title: Name of the project
+          type: string
+          description: The name of the project
+        description:
+          title: Description
+          type: string
+          description: Description of the project
+        scm_type:
+          title: SCM for the project Assets
+          type: string
+          default: Git
+          enum:
+            - git
+            - archive
+          enumNames:
+            - Git
+            - Zip File
+        repo:
+          title: URL
+          type: string
+          description: The URL for the Git repository or archive
+        organization:
+          title: Organization
+          type: string
+          default: Default
+          description: The organization for the project
+    - title: Provide information about the CI method
+      required:
+        - ci
+      properties:
+        ci:
+          title: Select a CI method
+          type: string
+          description: This action will create a simple CI based on chosen method
+          default: ../../scaffolder-skeletons/github-actions-skeleton/
+          enum:
+            - ../../scaffolder-skeletons/github-actions-skeleton/
+            - ../../scaffolder-skeletons/tekton-skeleton/
+          enumNames:
+            - GitHub Action
+            - Tekton
+  steps:
+    - id: ci-template
+      name: Generating the CI component
+      action: fetch:template
+      input:
+        url: ${{ parameters.ci }}
+        copyWithoutTemplating:
+          - .github/workflows/
+        values:
+          github_org: ${{ parameters.githubOrg }}
+          repo_name: ${{ parameters.repoName }}
+          namespace: ${{ parameters.namespace }}
+          image_namespace: ${{ parameters.imageNamespace }}
+          default_branch: main
+          image_builder: s2i-go
+          image_repository: ${{ parameters.imageRepository }}
+
+    - id: template
+      name: Generating the source code component
+      action: fetch:template
+      input:
+        url: ./skeleton
+        values:
+          github_org: ${{ parameters.githubOrg }}
+          repo_name: ${{ parameters.repoName }}
+          description: ${{ parameters.description }}
+          owner: ${{ parameters.owner}}
+          namespace: ${{ parameters.namespace }}
+          image_namespace: ${{ parameters.imageNamespace }}
+          port: ${{ parameters.port }}
+          image_repository: ${{ parameters.imageRepository }}
+
+    - id: catalog-template
+      name: Generating catalog-info.yaml
+      action: fetch:template
+      input:
+        url: ../../scaffolder-skeletons/catalog-info-skeleton/
+        values:
+          github_org: ${{ parameters.githubOrg }}
+          repo_name: ${{ parameters.repoName }}
+          description: ${{ parameters.description }}
+          owner: ${{ parameters.owner}}
+          namespace: ${{ parameters.namespace }}
+          image_namespace: ${{ parameters.imageNamespace }}
+          port: ${{ parameters.port }}
+          image_repository: ${{ parameters.imageRepository }}
+
+    - id: manifests-template
+      name: Generating manifest component
+      action: fetch:template
+      input:
+        url: ../../scaffolder-skeletons/manifests-skeleton/
+        values:
+          github_org: ${{ parameters.githubOrg }}
+          repo_name: ${{ parameters.repoName }}
+          description: ${{ parameters.description }}
+          owner: ${{ parameters.owner}}
+          namespace: ${{ parameters.namespace }}
+          image_namespace: ${{ parameters.imageNamespace }}
+          port: ${{ parameters.port }}
+          image_repository: ${{ parameters.imageRepository }}
+
+    - id: publish
+      name: Publishing to Source Code Repository
+      action: publish:github:pull-request
+      input:
+        allowedHosts: ['github.com']
+        description: ${{ parameters.description }}
+        repoUrl: github.com?owner=${{ parameters.githubOrg }}&repo=${{ parameters.repoName }}
+        defaultBranch: main
+
+    - id: register
+      name: Registering the component
+      action: catalog:register
+      input:
+        repoContentsUrl: ${{ steps.publish.output.repoContentsUrl }}
+        catalogInfoPath: '/catalog-info.yaml'
+
+  output:
+    links:
+      - title: Source Code Repository
+        url: ${{ steps.publish.output.remoteUrl }}
+      - title: Open Component in catalog
+        icon: catalog
+        entityRef: ${{ steps.register.output.entityRef }}
