@@ -58,7 +58,7 @@ spec:
           title: Workflow Nodes
           type: string
           description: Workflow Nodes to use for the playbook
-          ui:placeholder: |
+          default: |
             - identifier: node101
               unified_job_template:
                 name: Demo Job Template
