@@ -1,9 +1,9 @@
 apiVersion: scaffolder.backstage.io/v1beta3
 kind: Template
 metadata:
-  name: ansible-job
-  title: Launch an Ansible Job
-  description: Create a PR that will launch an Ansible Job
+  name: ansible-project-template
+  title: Ansible Automation Platform Job Template
+  description: Define a new Ansible Job Template
   tags:
     - recommended
     - aap
@@ -16,10 +16,6 @@ spec:
         - githubOrg
         - repo_name
       properties:
-        githubOrg:
-          title: GitHub Organization
-          type: string
-          default: 'cooktheryan'
         owner:
           title: Owner
           type: string
@@ -29,40 +25,55 @@ spec:
           title: Repository Name
           type: string
           default: 'backstage-awx-resources'
-    - title: AAP Schedule Defintion
+        githubOrg:
+          title: GitHub Organization
+          type: string
+          default: 'cooktheryan'
+    - title: AAP Job Template Defintion
       required:
+        - playbook
         - name
-        - jobTemplate
+        - inventory
+        - project
       properties:
         name:
-          title: Name of the job defintion for Kubernetes
+          title: Name of the job template
           type: string
-          description: The name of the job definition
-        jobTemplate:
-          title: Name of the Job Template to launch
+          description: The name of the job template
+        playbook:
+          title: Ansible Playbook
           type: string
-          description: Specify the job template to launch
+          description: Ansible Playbook to run
+        project:
+          title: Ansible Project
+          type: string
+          description: Ansible Project that contains the repository containing the playbook
+        inventory:
+          title: Inventory
+          type: string
+          description: Inventory to use for the playbook
   steps:
     - id: template
       name: Generating the source code component
       action: fetch:template
       input:
         url: ./skeleton
-        targetPath: argo/ansibleJobs/
+        targetPath: argo/jobTemplates
         values:
           component_id: ${{ parameters.name }}
-          jobTemplate: ${{ parameters.jobTemplate }}
-          schedule: ${{ parameters.schedule }}
-          name: ${{ parameters.name }}
-
+          playbook: ${{ parameters.playbook }}
+          project: ${{ parameters.project }}
+          inventory: ${{ parameters.inventory }}
+  
     - id: publish
       name: Publishing to Source Code Repository
       action: publish:github:pull-request
       input:
         allowedHosts: ['github.com']
-        description: AAP job to run ${{ parameters.name }}
+        title: ${{ parameters.name }}-job-template
+        description: ${{ parameters.name }}-job-template
         repoUrl: github.com?owner=${{ parameters.githubOrg }}&repo=${{ parameters.repo_name }}
-        branchName: ${{ parameters.name }}-ansible-job
+        branchName: ${{ parameters.name }}-job-template
 
   output:
     links:
