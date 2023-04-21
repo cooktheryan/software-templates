@@ -83,9 +83,10 @@ spec:
         values:
           component_id: ${{ parameters.name }}
           name: ${{ parameters.name }}
-          playbook: ${{ parameters.playbook }}
-          project: ${{ parameters.project }}
+          description: ${{ parameters.description }}
+          organization: ${{ parameters.organization }}
           inventory: ${{ parameters.inventory }}
+          workflow_nodes: ${{ parameters.workflow_nodes }}
   
     - id: publish
       name: Publishing to Source Code Repository
