@@ -9,3 +9,4 @@ spec:
     - https://github.com/cooktheryan/software-templates/blob/internal_reg/scaffolder-templates/ansible-project-template/template.yaml
     - https://github.com/cooktheryan/software-templates/blob/internal_reg/scaffolder-templates/ansible-schedule-template/template.yaml
     - https://github.com/cooktheryan/software-templates/blob/internal_reg/scaffolder-templates/ansible-job/template.yaml
+    - https://github.com/cooktheryan/software-templates/blob/internal_reg/scaffolder-templates/ansible-job-template/template.yaml
