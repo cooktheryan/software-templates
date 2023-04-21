@@ -61,6 +61,7 @@ spec:
         targetPath: argo/jobTemplates
         values:
           component_id: ${{ parameters.name }}
+          name: ${{ parameters.name }}
           playbook: ${{ parameters.playbook }}
           project: ${{ parameters.project }}
           inventory: ${{ parameters.inventory }}
