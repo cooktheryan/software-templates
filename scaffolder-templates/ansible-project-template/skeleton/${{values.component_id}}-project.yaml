@@ -1,7 +1,7 @@
 apiVersion: tower.ansible.com/v1alpha1
 kind: AnsibleProject
 metadata:
-  name: ${{values.name}}-project-$${{values.scm_type}}
+  name: ${{values.name}}-project-${{values.scm_type}}
 spec:
   repo: ${{values.repo}}
   branch: ${{values.branch}}
