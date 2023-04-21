@@ -52,7 +52,6 @@ spec:
         values:
           component_id: ${{ parameters.name }}
           jobTemplate: ${{ parameters.jobTemplate }}
-          schedule: ${{ parameters.schedule }}
           name: ${{ parameters.name }}
 
     - id: publish
