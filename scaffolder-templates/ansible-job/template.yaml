@@ -59,9 +59,10 @@ spec:
       action: publish:github:pull-request
       input:
         allowedHosts: ['github.com']
-        description: AAP job to run ${{ parameters.name }}
+        title: ${{ parameters.name }}-job
+        description: ${{ parameters.name }}-job
         repoUrl: github.com?owner=${{ parameters.githubOrg }}&repo=${{ parameters.repo_name }}
-        branchName: ${{ parameters.name }}-ansible-job
+        branchName: ${{ parameters.name }}-job
 
   output:
     links:
