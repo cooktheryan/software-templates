@@ -1,9 +1,9 @@
 apiVersion: scaffolder.backstage.io/v1beta3
 kind: Template
 metadata:
-  name: ansible-schedule-template
-  title: Ansible Automation Platform Schedule
-  description: Define a new Ansible Schedule for a job
+  name: ansible-job
+  title: Launch an Ansible Job
+  description: Create a PR that will launch an Ansible Job
   tags:
     - recommended
     - aap
@@ -31,30 +31,24 @@ spec:
           default: 'backstage-awx-resources'
     - title: AAP Schedule Defintion
       required:
-        - schedule
         - name
         - jobTemplate
       properties:
         name:
-          title: Name of the Schedule
+          title: Name of the job defintion for Kubernetes
           type: string
-          description: The name of the schedule
+          description: The name of the job definition
         jobTemplate:
-          title: Name of the Job Template
+          title: Name of the Job Template to launch
           type: string
-          description: Specify the job template to associate the schedule with
-        schedule:
-          title: Schedule of the job
-          type: string
-          default: "DTSTART:20210101T000000Z RRULE:FREQ=DAILY;INTERVAL=1;COUNT=1"
-          description: The time and frequency to run the job
+          description: Specify the job template to launch
   steps:
     - id: template
       name: Generating the source code component
       action: fetch:template
       input:
         url: ./skeleton
-        targetPath: argo/schedules/
+        targetPath: argo/ansibleJobs/
         values:
           component_id: ${{ parameters.name }}
           jobTemplate: ${{ parameters.jobTemplate }}
@@ -66,8 +60,7 @@ spec:
       action: publish:github:pull-request
       input:
         allowedHosts: ['github.com']
-        title: ${{ parameters.name }}-schedule
-        description: Schedule for ${{ parameters.name }}
+        description: AAP job to run ${{ parameters.name }}
         repoUrl: github.com?owner=${{ parameters.githubOrg }}&repo=${{ parameters.repo_name }}
         branchName: ${{ parameters.name }}-schedule
 
@@ -75,4 +68,3 @@ spec:
     links:
       - title: Source Code Repository
         url: ${{ steps.publish.output.remoteUrl }}
-
