@@ -1,7 +1,7 @@
 apiVersion: scaffolder.backstage.io/v1beta3
 kind: Template
 metadata:
-  name: ansible-project-template
+  name: ansible-job-template
   title: Ansible Automation Platform Job Template
   description: Define a new Ansible Job Template
   tags:
