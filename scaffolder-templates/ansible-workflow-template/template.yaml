@@ -86,8 +86,8 @@ spec:
           description: ${{ parameters.description }}
           organization: ${{ parameters.organization }}
           inventory: ${{ parameters.inventory }}
-          workflow_nodes: ${{ parameters.workflow_nodes }}
-  
+          
+            
     - id: publish
       name: Publishing to Source Code Repository
       action: publish:github:pull-request
