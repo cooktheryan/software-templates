@@ -5,5 +5,5 @@ metadata:
   name: ${{ values.component_id }}-job
 spec:
   connection_secret: awxaccess
-  job_template_name: {{ values.jobTemplate }}
+  job_template_name: ${{ values.jobTemplate }}
   runner_pull_policy: IfNotPresent
