@@ -1,0 +1,9 @@
+apiVersion: tower.ansible.com/v1alpha1
+kind: AnsibleWorkflow
+metadata:
+  name: ${{values.name}}-workflow
+spec:
+  inventory: ${{value.inventory}}
+  workflow_template_name: ${{value.template_name}}}
+  connection_secret: awxaccess
+  runner_pull_policy: IfNotPresent
