@@ -1,0 +1,12 @@
+apiVersion: tower.ansible.com/v1alpha1
+kind: WorkflowTemplate
+metadata:
+  name: ${{ values.name }}-workflow-template
+spec:
+  connection_secret: awxaccess
+  name: ${{ values.name }}
+  description: ${{ values.description }}
+  organization: ${{ values.organization }}
+  inventory: ${{ values.inventory }}
+  workflow_nodes:
+    ${{ values.workflow_nodes }}
