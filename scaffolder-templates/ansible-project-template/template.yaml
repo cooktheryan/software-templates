@@ -81,7 +81,7 @@ spec:
           branch: ${{ parameters.branch }}
           name: ${{ parameters.name }}
           scm_type: ${{ parameters.scm_type }}
-          organization: ${{ parameters.organization }}}
+          organization: ${{ parameters.organization }}
           description: ${{ parameters.description }}
   
     - id: publish
