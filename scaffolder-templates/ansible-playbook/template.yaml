@@ -1,0 +1,71 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: ansible-playbook
+  title: Define an Ansible playbook
+  description: Create a PR that will define an Ansible Playbook
+  tags:
+    - recommended
+    - aap
+spec:
+  owner: cooktheryan
+  type: service
+  parameters:
+    - title: Provide information about the GitHub location
+      required:
+        - githubOrg
+        - repo_name
+      properties:
+        githubOrg:
+          title: GitHub Organization
+          type: string
+          default: 'cooktheryan'
+        owner:
+          title: Owner
+          type: string
+          description: Owner of the component
+          default: 'user: cooktheryan'
+        repo_name:
+          title: Repository Name
+          type: string
+          default: 'ansible-tower-samples'
+    - title: Ansible Playbook definition
+      required:
+        - playbook
+        - playbook-name
+      properties:
+        playbook-name:
+          title: Playbook Name
+          type: string
+          description: Provide a name for the ansible playbook file
+        playbook:
+          title: Playbook
+          type: string
+          description: Ansible Playbook
+          ui:widget: textarea
+          ui:options:
+            rows: 15
+  steps:
+    - id: template
+      name: Generating the source code component
+      action: fetch:template
+      input:
+        url: ./skeleton
+        values:
+          playbook-name: ${{ parameters.playbook-name }}
+          playbook: ${{ parameters.playbook }}
+
+    - id: publish
+      name: Publishing to Source Code Repository
+      action: publish:github:pull-request
+      input:
+        allowedHosts: ['github.com']
+        title: ${{ parameters.playbook-name }}-playbook
+        description: ${{ parameters.playbook-name }}-playbook
+        repoUrl: github.com?owner=${{ parameters.githubOrg }}&repo=${{ parameters.repo_name }}
+        branchName: ${{ parameters.playbook-name }}-playbook
+
+  output:
+    links:
+      - title: Source Code Repository
+        url: ${{ steps.publish.output.remoteUrl }}
