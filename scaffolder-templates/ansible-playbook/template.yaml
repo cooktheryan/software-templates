@@ -52,7 +52,7 @@ spec:
       input:
         url: ./skeleton
         values:
-          playbook-name: ${{ parameters.playbookName }}
+          playbookName: ${{ parameters.playbookName }}
           playbook: ${{ parameters.playbook }}
 
     - id: publish
