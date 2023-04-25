@@ -36,11 +36,17 @@ spec:
         - codeRepo
         - scm_type
         - organization
+        - branch
       properties:
         name:
           title: Name of the project
           type: string
           description: The name of the project
+        branch:
+          title: Branch
+          type: string
+          description: The branch for the project
+          default: main
         description:
           title: Description
           type: string
