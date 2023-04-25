@@ -3,7 +3,7 @@ kind: AnsibleProject
 metadata:
   name: ${{values.name}}-project-${{values.scm_type}}
 spec:
-  repo: ${{values.codeRepo}}
+  repo: ${{values.coderepo}}
   branch: ${{values.branch}}
   name: ${{values.name}}
   scm_type: ${{values.scm_type}}

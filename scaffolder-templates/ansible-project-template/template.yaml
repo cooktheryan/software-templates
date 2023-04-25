@@ -33,7 +33,7 @@ spec:
       required:
         - description
         - name
-        - codeRepo
+        - coderepo
         - scm_type
         - organization
         - branch
@@ -61,7 +61,7 @@ spec:
           enumNames:
             - Git
             - Zip File
-        codeRepo:
+        coderepo:
           title: URL
           type: string
           description: The URL for the Git repository or archive
@@ -78,7 +78,7 @@ spec:
         url: ./skeleton
         targetPath: argo/projects
         values:
-          repo: ${{ parameters.codeRepo }}
+          repo: ${{ parameters.coderepo }}
           branch: ${{ parameters.branch }}
           name: ${{ parameters.name }}
           scm_type: ${{ parameters.scm_type }}
