@@ -58,9 +58,6 @@ spec:
           title: Workflow Nodes
           type: string
           description: Workflow Nodes to use for the playbook
-          ui:widget: textarea
-          ui:options:
-            rows: 15
   steps:
     - id: template
       name: Generating the source code component
