@@ -32,9 +32,9 @@ spec:
     - title: Ansible Playbook definition
       required:
         - playbook
-        - playbook-name
+        - playbookName
       properties:
-        playbook-name:
+        playbookName:
           title: Playbook Name
           type: string
           description: Provide a name for the ansible playbook file
@@ -52,7 +52,7 @@ spec:
       input:
         url: ./skeleton
         values:
-          playbook-name: ${{ parameters.playbook-name }}
+          playbook-name: ${{ parameters.playbookName }}
           playbook: ${{ parameters.playbook }}
 
     - id: publish
@@ -60,10 +60,10 @@ spec:
       action: publish:github:pull-request
       input:
         allowedHosts: ['github.com']
-        title: ${{ parameters.playbook-name }}-playbook
-        description: ${{ parameters.playbook-name }}-playbook
+        title: ${{ parameters.playbookName }}-playbook
+        description: ${{ parameters.playbookName }}-playbook
         repoUrl: github.com?owner=${{ parameters.githubOrg }}&repo=${{ parameters.repo_name }}
-        branchName: ${{ parameters.playbook-name }}-playbook
+        branchName: ${{ parameters.playbookName }}-playbook
 
   output:
     links:
