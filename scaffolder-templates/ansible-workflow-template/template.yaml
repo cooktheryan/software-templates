@@ -58,23 +58,9 @@ spec:
           title: Workflow Nodes
           type: string
           description: Workflow Nodes to use for the playbook
+          ui:widget: textarea
           ui:options:
             rows: 15
-          default: |
-            - identifier: node101
-              unified_job_template:
-                name: Demo Job Template
-                inventory:
-                  organization:
-                    name: Default
-                type: job_template
-            - identifier: node102
-              unified_job_template:
-                name: Demo Job Template
-                inventory:
-                  organization:
-                    name: Default
-                type: job_template
   steps:
     - id: template
       name: Generating the source code component
