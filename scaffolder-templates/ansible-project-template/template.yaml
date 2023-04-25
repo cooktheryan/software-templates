@@ -78,7 +78,6 @@ spec:
         url: ./skeleton
         targetPath: argo/projects
         values:
-          component_id: ${{ parameters.name }}
           repo: ${{ parameters.codeRepo }}
           branch: ${{ parameters.branch }}
           name: ${{ parameters.name }}
