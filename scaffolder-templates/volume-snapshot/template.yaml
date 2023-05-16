@@ -29,10 +29,10 @@ spec:
           title: Repository Name
           type: string
           default: 'backstage-awx-resources'
-    - title: AAP Schedule Defintion
+    - title: AAP Snapshot Definition
       required:
         - name
-        - jobTemplate
+        - namespace 
       properties:
         name:
           title: Name of the job defintion for Kubernetes
