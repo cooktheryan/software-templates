@@ -1,0 +1,70 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: volume-snapshot
+  title: Launch an Ansible Job to take a snapshot
+  description: Create a PR that will take snapshots of pvcs in a Namespace
+  tags:
+    - recommended
+    - aap
+spec:
+  owner: cooktheryan
+  type: service
+  parameters:
+    - title: Provide information about the GitHub location
+      required:
+        - githubOrg
+        - repo_name
+      properties:
+        githubOrg:
+          title: GitHub Organization
+          type: string
+          default: 'cooktheryan'
+        owner:
+          title: Owner
+          type: string
+          description: Owner of the component
+          default: 'user: cooktheryan'
+        repo_name:
+          title: Repository Name
+          type: string
+          default: 'backstage-awx-resources'
+    - title: AAP Schedule Defintion
+      required:
+        - name
+        - jobTemplate
+      properties:
+        name:
+          title: Name of the job defintion for Kubernetes
+          type: string
+          description: The name of the job definition
+        namespace:
+          title: Namespace
+          type: string
+          description: Namespace to snapshot 
+  steps:
+    - id: template
+      name: Generating the source code component
+      action: fetch:template
+      input:
+        url: ./skeleton
+        targetPath: argo/ansibleJobs/
+        values:
+          component_id: ${{ parameters.name }}
+          jobTemplate: ${{ parameters.namespace }}
+          name: ${{ parameters.name }}
+
+    - id: publish
+      name: Publishing to Source Code Repository
+      action: publish:github:pull-request
+      input:
+        allowedHosts: ['github.com']
+        title: ${{ parameters.name }}-job
+        description: ${{ parameters.name }}-job
+        repoUrl: github.com?owner=${{ parameters.githubOrg }}&repo=${{ parameters.repo_name }}
+        branchName: ${{ parameters.name }}-job
+
+  output:
+    links:
+      - title: Source Code Repository
+        url: ${{ steps.publish.output.remoteUrl }}
